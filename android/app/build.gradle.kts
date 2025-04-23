@@ -11,7 +11,8 @@ plugins {
 android {
     namespace = "com.example.tappo"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+//    ndkVersion = flutter.ndkVersion
+    ndkVersion = "29.0.13113456"  // Set the correct NDK version
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -27,7 +28,8 @@ android {
         applicationId = "com.example.tappo"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+//        minSdk = flutter.minSdkVersion
+        minSdk = 23 // Set the correct minSdkVersion to 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
