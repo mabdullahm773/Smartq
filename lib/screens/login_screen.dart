@@ -14,7 +14,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(child: Text("SIGN IN"), onPressed: () => signInWithGoogle()),
+        child: Row(
+          children: [
+            ElevatedButton(child: Text("SIGN IN"), onPressed: () => signInWithGoogle()),
+            ElevatedButton(child: Text("SIGN OUT"), onPressed: () => signOutWithGoogle()),
+          ],
+        ),
       ),
     );
   }
