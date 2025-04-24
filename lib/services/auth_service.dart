@@ -21,8 +21,6 @@ Future<void> signInWithGoogle() async {
     User? user = userCredential.user;
     await checkUserData(user!);
     print("Login Successfull");
-    // Once signed in, return the UserCredential
-    //return await FirebaseAuth.instance.signInWithCredential(credential);
   }
   catch(e){
     print("An Error Ocurred : ${e}");

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tappo/screens/profile_screen.dart';
 import 'package:tappo/services/auth_service.dart';
+import 'package:tappo/widgets/loading_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             ElevatedButton(child: Text("SIGN IN"), onPressed: () => signInWithGoogle()),
             ElevatedButton(child: Text("SIGN OUT"), onPressed: () => signOutWithGoogle()),
+            ElevatedButton(child: Text("Profile Page"), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()))),
           ],
         ),
       ),

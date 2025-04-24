@@ -1,5 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:tappo/services/local_storage_service.dart';
 
 
 Future<void> checkUserData(User user) async {
@@ -16,6 +17,7 @@ Future<void> checkUserData(User user) async {
         'photoURL' : user.photoURL,
         'createdAt' : FieldValue.serverTimestamp(),
       });
+      await LocalStorageService.savingDataLocally(user!);
     }
     else{
         print("User ${user.displayName} Already Exists");
@@ -25,4 +27,5 @@ Future<void> checkUserData(User user) async {
 print("An error Occurred ${e}");
   }
 }
+
 
