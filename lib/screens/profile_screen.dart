@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
@@ -41,18 +43,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(),
       body: Column(
         children: [
-          file != null
-              ? Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: Height * 0.04),
+          Padding(
+            padding: EdgeInsets.only(top: Height * 0.05),
+            // for icon and edit button
+            child: Stack(
+              children: [
+                file != null
+                ? Center(
                   child: CircleAvatar(
                       radius: Width * 0.23,
                       backgroundImage : FileImage(file!)
-                  ),
+                    ),
+                )
+                : Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: Height * 0.04),
+                    child: CircularProgressIndicator(),
+                  )
                 ),
-              )
-              : Center(child: CircularProgressIndicator()),
-        ],
+                Padding(
+                  padding: EdgeInsets.only(top: Height * 0.18, left: Width * 0.27),
+                  child: Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        backgroundColor: Colors.grey
+                      ),
+                      onPressed: () {},
+                      child: Icon(Icons.edit, color: Colors.black, size: Width * 0.05,)
+                    ),
+                  )
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: Width * 0.15, vertical: Height * 0.05),
+            child: TextField(
+              // controller: _namecontroller,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(Height * 0.02)
+                ),
+              ),
+              keyboardType: TextInputType.name,
+              textInputAction: TextInputAction.done,
+              maxLength: 30,
+              maxLines: 1,
+            ),
+          )
+        ]
       )
     );
   }
