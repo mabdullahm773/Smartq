@@ -7,6 +7,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import '../services/auth_service.dart';
 import '../services/firebase_data_service.dart';
 import '../services/screen_size_service.dart';
+import '../services/user_data_service.dart';
 import '../services/user_manager_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,27 +19,31 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  Future <void> _checkstatus() async {
-    // at start of app user instance is created
-    await UserManager().initialize();
-
-    if(await checkLoginStatus()){
-      print("@@@@@@@@@@@          SPLASH SCREEN ALREADY LOGGED IN");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    }
-    else{
-      print("@@@@@@@@@@@          SPLASH SCREEN NOT LOGGED IN");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-    }
-  }
   void initState() {
     Future.delayed(Duration(seconds : 2),(){
-      _checkstatus();
+      print("@@@@@@@@@@                   checking login status start");
+      _checkLoginStatus();
     });
-
     // TODO: implement initState
     super.initState();
   }
+
+  Future <void> _checkLoginStatus() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      print("@@@@@@@@@@                   user is not null 1");
+
+      await UserManager().initialize(); // Load user data
+      print("@@@@@@@@@@                   user is not null 2");
+      await checkUserData();  // Check if user exists in Firestore or create new
+      print("@@@@@@@@@@                   user is not null  3");
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+    }
+    else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

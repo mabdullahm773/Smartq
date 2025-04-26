@@ -1,19 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'firebase_data_service.dart';
-
-User? user;
-
-Future<bool> checkLoginStatus() async {
-  user = FirebaseAuth.instance.currentUser;
-  if (user != null)// User is logged in
-  {
-    return true;
-  }
-  else // User is NOT logged in
-    return false;
-}
 
 Future<void> signInWithGoogle() async {
   try{

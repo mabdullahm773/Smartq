@@ -5,7 +5,7 @@ import "package:tappo/screens/login_screen.dart";
 import "package:tappo/screens/splash_screen.dart";
 import "package:tappo/services/screen_size_service.dart";
 
-void _FirebaseInitializing()async{
+Future<void> _FirebaseInitializing()async{
   // Ensure that Firebase is initialized before the app runs
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -13,8 +13,8 @@ void _FirebaseInitializing()async{
   );
 }
 
-void main(){
-  _FirebaseInitializing();
+void main() async {
+  await _FirebaseInitializing();
   runApp(MyApp());
 }
 

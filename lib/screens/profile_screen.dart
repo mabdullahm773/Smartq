@@ -1,13 +1,8 @@
 import 'dart:io';
 import 'package:tappo/services/image_service.dart';
 import 'package:tappo/widgets/floating_button.dart';
-
-import '../services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:tappo/screens/login_screen.dart';
 import 'package:tappo/services/screen_size_service.dart';
-import 'package:tappo/services/firebase_data_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/user_manager_service.dart';
 
@@ -19,30 +14,24 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  final userManager = UserManager();
   bool _updatedetail = false;
   File? file;
   TextEditingController _usernameController = TextEditingController(text: UserManager().name);
   TextEditingController _emailController = TextEditingController(text: UserManager().email);
-  TextEditingController _createdAtController = TextEditingController(text: UserManager().createdAt);
+  TextEditingController _createdAtController = TextEditingController(text: UserManager().getFormattedCreatedAt());
+  @override
   @override
   void initState() {
     super.initState();
     _loadProfileImage();
-    //Map<String, dynamic> userData = await LocalStorageService.fetchUserData();
   }
 
   Future<void> _loadProfileImage() async {
-    // Wait for SharedPreferences to load
-    final prefs = await SharedPreferences.getInstance();
-    final path = prefs.getString('user_profile');
-
-    if (path != null) {
-      setState(() {
-        file = File(path);
-      });
-    }
+    await userManager.refreshProfileImage();
+    setState(() {});
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,18 +44,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // for icon and edit button
               child: Stack(
                 children: [
-                  file != null
-                  ? Center(
+                  Center(
                     child: CircleAvatar(
-                        radius: Width * 0.23,
-                        backgroundImage : FileImage(file!)
-                      ),
-                  )
-                  : Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: Height * 0.04),
-                      child: CircularProgressIndicator(),
-                    )
+                      radius: Width * 0.23,
+                      backgroundImage: userManager.getProfileImageProvider(),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: Height * 0.18, left: Width * 0.27),
@@ -104,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 maxLines: 1,
                 onChanged: (value){
                   setState(() {
-                    if(value == uname)
+                    if(value == UserManager().name)
                       _updatedetail = false;
                     else
                         _updatedetail = true;

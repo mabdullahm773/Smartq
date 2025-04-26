@@ -26,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ElevatedButton(
             onPressed: (){
-              displaydebug();
               Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
             },
             child: Text("Profile Page")
