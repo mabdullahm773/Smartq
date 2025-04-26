@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tappo/screens/login_screen.dart';
 import 'dart:io';
-import 'package:tappo/services/screen_size_service.dart';
-import 'package:tappo/services/local_storage_service.dart';
+import 'package:tappo/services/image_service.dart';
+import 'package:tappo/widgets/floating_button.dart';
 
 import '../services/auth_service.dart';
+import 'package:flutter/material.dart';
+import 'package:tappo/screens/login_screen.dart';
+import 'package:tappo/services/screen_size_service.dart';
+import 'package:tappo/services/firebase_data_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,9 +17,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _updatedetail = false;
   File? file;
   TextEditingController _usernameController = TextEditingController(text: uname);
   TextEditingController _emailController = TextEditingController(text: uemail);
+  TextEditingController _createdAtController = TextEditingController(text: ucreatedAt);
   @override
   void initState() {
     super.initState();
@@ -70,29 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: CircleBorder(),
                           backgroundColor: Colors.grey
                         ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Your Title'),
-                                  content: SingleChildScrollView(  // Wrap content in scroll view or fixed size
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,  // Important!
-                                      children: [
-                                        Text('Hello'),
-                                        // your widgets here...
-                                      ],
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(onPressed: () {}, child: Text('OK')),
-                                  ],
-                                );
-
-                              },
-                            );
-                          },
+                          onPressed: () => _showImageEditingDialogue(context),
 
                           child: Icon(Icons.edit, color: Colors.black, size: Width * 0.05,)
                       ),
@@ -118,6 +100,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 textInputAction: TextInputAction.done,
                 maxLength: 30,
                 maxLines: 1,
+                onChanged: (value){
+                  setState(() {
+                    if(value == uname)
+                      _updatedetail = false;
+                    else
+                        _updatedetail = true;
+                  });
+                },
               ),
             ),
             Padding(
@@ -140,38 +130,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 maxLines: 1,
               ),
             ),
+            Padding(
+              padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
+              // for email
+              child: TextField(
+                readOnly: true,
+                controller: _createdAtController,
+                decoration: InputDecoration(
+                  counterText : "",
+                  labelText : "Id Created At ",
+                  hintText: ucreatedAt,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(Height * 0.02),
+                  ),
+                ),
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.done,
+                maxLength: 30,
+                maxLines: 1,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButtons(showsecondbutton: _updatedetail),
+            )
           ]
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amberAccent,
-        foregroundColor: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40)
-        ),
-        child: Icon(Icons.logout_rounded, size: 28),
-        onPressed: (){
-          signOutWithGoogle();
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-        }
-      ),
+      // floatingActionButton: Positioned(
+      //   bottom: Height * 0.1,
+      //   right:  Width * 0.05,
+      //   child: Row(
+      //     children: [
+      //       FloatingActionButton(
+      //         backgroundColor: Colors.amberAccent,
+      //         foregroundColor: Colors.red,
+      //         shape: RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.circular(40)
+      //         ),
+      //         child: Icon(Icons.logout_rounded, size: 28),
+      //         onPressed: (){
+      //           signOutWithGoogle();
+      //           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      //         }
+      //       ),
+      //       Visibility(
+      //         visible: _updatedetail,
+      //         child: FloatingActionButton(
+      //           backgroundColor: Colors.amberAccent,
+      //           foregroundColor: Colors.red,
+      //           shape: RoundedRectangleBorder(
+      //               borderRadius: BorderRadius.circular(40)
+      //           ),
+      //           child: Icon(Icons.logout_rounded, size: 28),
+      //           onPressed: (){
+      //             signOutWithGoogle();
+      //             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      //           }
+      //         )
+      //       )
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
 
-
 _showImageEditingDialogue(context){
   showDialog(
     context: context,
-    builder: (BuildContext context){
+    builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("data"),
-        content: Row(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ListTile()
+            Text('Choose the Source'),
+            IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close))
           ],
         ),
+        content: SingleChildScrollView(  // Wrap content in scroll view or fixed size
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  IconButton(onPressed: () => accessCamera(),
+                      icon: Icon(Icons.camera),
+                  ),
+                  Text("Camera")
+                ],
+              ),
+              Column(
+                children: [
+                  IconButton(onPressed: () => accessGallery(),
+                    icon: Icon(Icons.browse_gallery),
+                  ),
+                  Text("Gallery")
+                ],
+              ),
+            ],
+          ),
+        ),
       );
-    }
+    },
   );
 }

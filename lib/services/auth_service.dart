@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'local_storage_service.dart';
+import 'firebase_data_service.dart';
 
 Future<bool> checkLoginStatus() async {
   User? user = FirebaseAuth.instance.currentUser;
-  if (user != null) // User is logged in
+  if (user != null)// User is logged in
+  {
+    await fetchUserData();
     return true;
+  }
   else // User is NOT logged in
     return false;
 }
@@ -28,6 +31,8 @@ Future<void> signInWithGoogle() async {
 
     UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
     User? user = userCredential.user;
+
+    // check user data whether he have a account in the db or not
     await checkUserData(user!);
     print("Login Successfull");
   }
@@ -61,10 +66,11 @@ Future<void> checkUserData(User user) async {
         'photoURL' : user.photoURL,
         'createdAt' : FieldValue.serverTimestamp(),
       });
-      await savingDataLocally(user);
+      await saveLocalData();
     }
     else {
       print("User ${user.displayName} Already Exists");
+      fetchLocalData();
     }
   }
   catch(e){

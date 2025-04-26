@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tappo/screens/login_screen.dart';
 import 'package:tappo/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,13 +17,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-          },
-          child: Text("Profile Page")
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+            },
+            child: Text("Profile Page")
+          ),
+          ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+              child: Text("Sign Out")
+          ),
+        ],
       ),
     );
   }
