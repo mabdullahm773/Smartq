@@ -14,12 +14,18 @@ late String ucreatedAt;
 File? photoFile;
 
 Future<void> fetchUserData() async {
+  print("@@@@@@@@@@@           FETCHING USER DATA");
   user = FirebaseAuth.instance.currentUser!;
   uname = user.displayName!;
   uemail = user.email!;
   // for image and created at
+  print("@@@@@@@@@@@           FETCHING USER DATA DONE");
+  print("@@@@@@@@@@@           FETCHING LOCAL DATA");
+
   fetchLocalData();
 
+  print("@@@@@@@@@@@           FETCHING USER DATA");
+  print("@@@@@@@@@@@           FETCHING USER DATA DONE");
 
 }
 
@@ -33,8 +39,8 @@ Future<void> fetchLocalData() async {
     if(ucreatedAt == "Not Found" && await checkInternetConnection()){
       final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       userDoc.get('createdAt');
-
       await saveLocalData();
+
     }
     // Retrieve photo
     String? photoPath = prefs.getString('photoPath_${user.uid}');
@@ -67,4 +73,13 @@ Future<void> saveLocalData() async {
     }
   } catch (e) {
   }
+}
+
+
+
+// ONLY FOR DEBUGGING
+void displaydebug(){
+  user = FirebaseAuth.instance.currentUser!;
+  print('User UID: ${user?.uid}');
+
 }

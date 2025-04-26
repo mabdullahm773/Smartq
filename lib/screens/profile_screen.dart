@@ -9,6 +9,8 @@ import 'package:tappo/services/screen_size_service.dart';
 import 'package:tappo/services/firebase_data_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/user_manager_service.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -19,9 +21,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _updatedetail = false;
   File? file;
-  TextEditingController _usernameController = TextEditingController(text: uname);
-  TextEditingController _emailController = TextEditingController(text: uemail);
-  TextEditingController _createdAtController = TextEditingController(text: ucreatedAt);
+  TextEditingController _usernameController = TextEditingController(text: UserManager().name);
+  TextEditingController _emailController = TextEditingController(text: UserManager().email);
+  TextEditingController _createdAtController = TextEditingController(text: UserManager().createdAt);
   @override
   void initState() {
     super.initState();
@@ -91,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: InputDecoration(
                   counterText : "",
                   labelText : "Username ",
-                  hintText: uname,
+                  hintText: UserManager().name,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Height * 0.02),
                   ),
@@ -119,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: InputDecoration(
                   counterText : "",
                   labelText : "Email ",
-                  hintText: uemail,
+                  hintText: UserManager().email,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Height * 0.02),
                   ),
@@ -139,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: InputDecoration(
                   counterText : "",
                   labelText : "Id Created At ",
-                  hintText: ucreatedAt,
+                  hintText: UserManager().createdAt,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Height * 0.02),
                   ),

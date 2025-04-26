@@ -7,6 +7,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import '../services/auth_service.dart';
 import '../services/firebase_data_service.dart';
 import '../services/screen_size_service.dart';
+import '../services/user_manager_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,12 +19,15 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Future <void> _checkstatus() async {
-    if(await checkLoginStatus()){
+    // at start of app user instance is created
+    await UserManager().initialize();
 
+    if(await checkLoginStatus()){
+      print("@@@@@@@@@@@          SPLASH SCREEN ALREADY LOGGED IN");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     }
     else{
-      // print("@@@@@@@@@@@           NOT LOGGED IN");
+      print("@@@@@@@@@@@          SPLASH SCREEN NOT LOGGED IN");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
     }
   }
