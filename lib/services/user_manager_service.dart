@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tappo/services/user_data_service.dart';
 
 class UserManager {
   static final UserManager _instance = UserManager._internal();
@@ -169,6 +168,31 @@ class UserManager {
       print('Error downloading profile image: $e');
     }
   }
+
+  Future<bool> updateUserName({ required String newName}) async {
+    try {
+      // Update Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({'name': newName});
+      print('User name updated successfully in Firestore');
+
+      // Update SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('${uid}_name', newName);
+      print('User name updated successfully in SharedPreferences');
+
+      //Update local variable
+      name = newName;
+      return true;
+    } catch (e) {
+      print('Error updating user name: $e');
+      return false;
+    }
+  }
+
+
 
   Future<void> refreshProfileImage() async {
     profileImage = await getLocalProfileImage();

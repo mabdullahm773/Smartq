@@ -11,7 +11,9 @@ class FloatingActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           if(showsecondbutton) FloatingActionButton(onPressed: (){},
             child: Icon(Icons.save),

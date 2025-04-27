@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:tappo/services/image_service.dart';
-import 'package:tappo/widgets/floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:tappo/services/screen_size_service.dart';
-
+import 'package:tappo/services/user_data_service.dart';
+import 'package:tappo/widgets/custom_message.dart';
+import 'package:tappo/widgets/loading_widget.dart';
+import '../services/auth_service.dart';
+import '../services/internet_service.dart';
 import '../services/user_manager_service.dart';
+import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -134,10 +138,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 maxLines: 1,
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: FloatingActionButtons(showsecondbutton: _updatedetail),
-            )
           ]
         ),
       ),
@@ -176,6 +176,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
       //     ],
       //   ),
       // ),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if(_updatedetail) FloatingActionButton(
+              onPressed: () async {
+                FocusManager.instance.primaryFocus?.unfocus();
+                showLoadingDialog(context);
+                String newname = _usernameController.text;
+                if(await UserManager().updateUserName(newName : newname)){
+                  hideLoadingDialog(context);
+                  showDialog(
+                    context: context,
+                    builder: (context) => SuccessMessage(
+                      title: "Success!",
+                      description: "Your data has been saved successfully.",
+                      onOkPressed: () => Navigator.pop(context),
+                    ),
+                  );
+                  setState(() {
+                    // close the keyboard
+                    _updatedetail = false;
+                  });
+                }
+                else{
+                  hideLoadingDialog(context);
+                  showDialog(
+                      context: context,
+                      builder: (context) => FailureMessage(
+                        title: "Oops!",
+                        description: "There was a network issue. Try again later.",
+                        onOkPressed: () => Navigator.pop(context),
+                      )
+                  );
+                  setState(() {
+                    // close the keyboard
+                    _updatedetail = false;
+                  });
+                }
+              },
+              child: Icon(Icons.save),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            FloatingActionButton(
+              onPressed: (){
+                signOutWithGoogle();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+              child: Icon(Icons.logout),
+            ),
+          ],
+        )
     );
   }
 }
