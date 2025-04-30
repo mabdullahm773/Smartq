@@ -3,7 +3,8 @@ import 'package:tappo/services/image_service.dart';
 import 'package:flutter/material.dart';
 import 'package:tappo/services/screen_size_service.dart';
 import 'package:tappo/services/user_data_service.dart';
-import 'package:tappo/widgets/custom_message.dart';
+import 'package:tappo/widgets/confirmation_message.dart';
+import 'package:tappo/widgets/custom_pop_message.dart';
 import 'package:tappo/widgets/loading_widget.dart';
 import '../services/auth_service.dart';
 import '../services/internet_service.dart';
@@ -25,121 +26,242 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _usernameController = TextEditingController(text: UserManager().name);
   TextEditingController _emailController = TextEditingController(text: UserManager().email);
   TextEditingController _createdAtController = TextEditingController(text: UserManager().getFormattedCreatedAt());
-  @override
+
   @override
   void initState() {
     super.initState();
     _loadProfileImage();
   }
 
+  Future<void> _floatingUpdateButton()async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    showLoadingDialog(context);
+    String newname = _usernameController.text;
+    if(await UserManager().updateUserName(newName : newname)){
+      hideLoadingDialog(context);
+      showDialog(
+        context: context,
+        builder: (context) => SuccessMessage(
+          title: "Success!",
+          description: "Your data has been saved successfully.",
+          onOkPressed: () => Navigator.pop(context),
+        ),
+      );
+      setState(() {
+        // close the keyboard
+        _updatedetail = false;
+      });
+    }
+    else{
+      hideLoadingDialog(context);
+      showDialog(
+          context: context,
+          builder: (context) => FailureMessage(
+            title: "Oops!",
+            description: "There was a network issue. Try again later.",
+            onOkPressed: () => Navigator.pop(context),
+          )
+      );
+      setState(() {
+        // close the keyboard
+        _updatedetail = false;
+      });
+    }
+  }
+
   Future<void> _loadProfileImage() async {
     await userManager.refreshProfileImage();
     setState(() {});
   }
-  @override
+
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: Height * 0.05),
-              // for icon and edit button
-              child: Stack(
+      backgroundColor: Color(0xFFE8E8D2),
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFFA700),
+        centerTitle: true,
+        title: Text("Profile", style: TextStyle(fontWeight: FontWeight.bold),),
+        elevation: 4,
+        shadowColor: Colors.black,
+        actions: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              child: GestureDetector(
+                onTap: () =>  Navigator.pop(context),
+                child: CircleAvatar(
+                  backgroundColor: Color(0xFFE8E8D2),
+                  child: Icon(Icons.home),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Center(
-                    child: CircleAvatar(
-                      radius: Width * 0.23,
-                      backgroundImage: userManager.getProfileImageProvider(),
+                  Padding(
+                    padding: EdgeInsets.only(top: Height * 0.05),
+                    // for icon and edit button
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Color(0xFFFFA700), width: 3),
+                              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))],
+                            ),
+                            child: CircleAvatar(
+                              radius: Width * 0.23,
+                              backgroundImage: userManager.getProfileImageProvider(),
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(top: Height * 0.18, left: Width * 0.27),
+                          child: Center(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                                backgroundColor: Color(0xFFFFA700)
+                              ),
+                                onPressed: () => _showImageEditingDialogue(context),
+                                child: Icon(Icons.edit, color: Colors.black, size: Width * 0.05,)
+                            ),
+                          )
+                        )
+                      ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: Height * 0.18, left: Width * 0.27),
-                    child: Center(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
-                          backgroundColor: Colors.grey
+                    padding: EdgeInsets.only(
+                      left: Width * 0.15,
+                      right: Width * 0.15,
+                      top: Height * 0.08,
+                    ),
+                    child: TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        labelText: " Username",
+                        labelStyle: TextStyle(fontSize: 15, color: Colors.black),
+                        hintText: UserManager().name.isNotEmpty ? UserManager().name : "Enter your username",
+                        prefixIcon: Icon(Icons.person_outline, color: Colors.grey[600]),
+                        filled: true,
+                        fillColor: Color(0xFFFFC300),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.02),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
                         ),
-                          onPressed: () => _showImageEditingDialogue(context),
-
-                          child: Icon(Icons.edit, color: Colors.black, size: Width * 0.05,)
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.02),
+                          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.08),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
                       ),
-                    )
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.08),
-              // for username
-              child: TextField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  counterText : "",
-                  labelText : "Username ",
-                  hintText: UserManager().name,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Height * 0.02),
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.done,
+                      maxLength: 30,
+                      maxLines: 1,
+                      style: TextStyle(fontSize: 17, color: Colors.black87),
+                      onChanged: (value) {
+                        setState(() {
+                          _updatedetail = (value != UserManager().name);
+                        });
+                      },
+                    ),
                   ),
-                ),
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.done,
-                maxLength: 30,
-                maxLines: 1,
-                onChanged: (value){
-                  setState(() {
-                    if(value == UserManager().name)
-                      _updatedetail = false;
-                    else
-                        _updatedetail = true;
-                  });
-                },
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
-              // for email
-              child: TextField(
-                readOnly: true,
-                controller: _emailController,
-                decoration: InputDecoration(
-                  counterText : "",
-                  labelText : "Email ",
-                  hintText: UserManager().email,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Height * 0.02),
+                  Padding(
+                    padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
+                    // for email
+                    child: TextField(
+                      readOnly: true,
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        counterText : "",
+                        labelText : " Email ",
+                        hintText: UserManager().email.isNotEmpty ? UserManager().email : "No Email Found X",
+                        prefixIcon: Icon(Icons.email, color: Colors.grey[600]),
+                        filled: true,
+                        fillColor: Color(0xFFFFC300),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.02),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.02),
+                          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.08),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.done,
+                      maxLength: 30,
+                      maxLines: 1,
+                    ),
                   ),
-                ),
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.done,
-                maxLength: 30,
-                maxLines: 1,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
-              // for email
-              child: TextField(
-                readOnly: true,
-                controller: _createdAtController,
-                decoration: InputDecoration(
-                  counterText : "",
-                  labelText : "Id Created At ",
-                  hintText: UserManager().createdAt,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(Height * 0.02),
+                  Padding(
+                    padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
+                    // for email
+                    child: TextField(
+                      readOnly: true,
+                      controller: _createdAtController,
+                      decoration: InputDecoration(
+                        counterText : "",
+                        labelText : " Id Created At ",
+                        hintText: UserManager().createdAt!.isNotEmpty ? UserManager().createdAt : "Not Found",
+                        prefixIcon: Icon(Icons.date_range, color: Colors.grey[600]),
+                        filled: true,
+                        fillColor: Color(0xFFFFC300),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.02),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.02),
+                          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(Height * 0.08),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.done,
+                      maxLength: 30,
+                      maxLines: 1,
+                    ),
                   ),
-                ),
-                keyboardType: TextInputType.name,
-                textInputAction: TextInputAction.done,
-                maxLength: 30,
-                maxLines: 1,
+                ]
               ),
             ),
-          ]
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              '© 2025 Tappo. Making smart living simple..',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+        ],
       ),
       // floatingActionButton: Positioned(
       //   bottom: Height * 0.1,
@@ -181,42 +303,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             if(_updatedetail) FloatingActionButton(
+              onPressed: () async => await _floatingUpdateButton(),
+              child: Icon(Icons.save, color: Colors.green, size: 28,),
+              shape: CircleBorder(),
+              backgroundColor: Color(0xFFFFA700),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            FloatingActionButton(
               onPressed: () async {
-                FocusManager.instance.primaryFocus?.unfocus();
-                showLoadingDialog(context);
-                String newname = _usernameController.text;
-                if(await UserManager().updateUserName(newName : newname)){
-                  hideLoadingDialog(context);
-                  showDialog(
-                    context: context,
-                    builder: (context) => SuccessMessage(
-                      title: "Success!",
-                      description: "Your data has been saved successfully.",
-                      onOkPressed: () => Navigator.pop(context),
-                    ),
-                  );
-                  setState(() {
-                    // close the keyboard
-                    _updatedetail = false;
-                  });
-                }
-                else{
-                  hideLoadingDialog(context);
-                  showDialog(
-                      context: context,
-                      builder: (context) => FailureMessage(
-                        title: "Oops!",
-                        description: "There was a network issue. Try again later.",
-                        onOkPressed: () => Navigator.pop(context),
-                      )
-                  );
-                  setState(() {
-                    // close the keyboard
-                    _updatedetail = false;
-                  });
-                }
+                showDialog(context: context,
+                    builder: (_) => ConfirmationMessage(
+                      title: "Confirm Deletion",
+                      description: "This will remove all the data from your account permanently. ",
+                      yesText: "Confirm",
+                      noText: "Back",
+                      onYesPressed: () {
+                          Navigator.pop(context);
+                          _handleDeletion(context);
+                      },
+                      onNoPressed: () => Navigator.pop(context)
+                    )
+                );
               },
-              child: Icon(Icons.save),
+              child: Icon(Icons.delete, color: Colors.red, size: 28,),
+              shape: CircleBorder(),
+              backgroundColor: Color(0xFFFFA700),
             ),
             SizedBox(
               height: 15,
@@ -227,7 +340,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               },
-              child: Icon(Icons.logout),
+              child: Icon(Icons.logout, color: Colors.red, size: 28,),
+              shape: CircleBorder(),
+              backgroundColor: Color(0xFFFFA700),
             ),
           ],
         )
@@ -274,3 +389,32 @@ _showImageEditingDialogue(context){
     },
   );
 }
+
+_handleDeletion(context) async {
+  showLoadingDialog(context);
+  if(await deleteUserAndData()){
+    hideLoadingDialog(context);
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => SuccessMessage(
+            title: "Success", description: "Your account has been successfully deleted.",
+            onOkPressed: (){
+              Navigator.pop(context);
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(builder: (_) => LoginScreen())
+              // );
+            }
+        )
+    );
+  } else{
+    hideLoadingDialog(context);
+    showDialog(
+        context: context,
+        builder: (context) => FailureMessage(title: "Failed", description: "Account deletion failed. Please try again later", onOkPressed: () =>Navigator.pop(context))
+    );
+  }
+}
+
+
