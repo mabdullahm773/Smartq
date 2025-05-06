@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "LsX74DMVra5FXHdXbE7vnfgmD/GWdIiiX5Q4nAUF1fY=",
+  "Source": "tappoapi",
+  "BasePath": "_content/tappoapi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
