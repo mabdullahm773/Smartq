@@ -401,10 +401,10 @@ _handleDeletion(context) async {
             title: "Success", description: "Your account has been successfully deleted.",
             onOkPressed: (){
               Navigator.pop(context);
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(builder: (_) => LoginScreen())
-              // );
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => LoginScreen())
+              );
             }
         )
     );
