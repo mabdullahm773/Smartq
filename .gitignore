@@ -1,0 +1,8 @@
+# Ignore JetBrains IDE settings
+.idea/
+
+# Ignore build artifacts
+build/
+
+# Ignore sensitive API keys
+Api/tappoapi/firebase_key.json
