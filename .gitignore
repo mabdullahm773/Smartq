@@ -5,4 +5,4 @@
 build/
 
 # Ignore sensitive API keys
-Api/tappoapi/firebase_key.json
+Api\tappoapi\firebase_key.json
