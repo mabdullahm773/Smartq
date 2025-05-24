@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Update the screen size when the widget is built
     ScreenSizeScreen.updateSize(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -20,7 +20,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds : 2),(){
+    Future.delayed(Duration(milliseconds : 2500),(){
       print("@@@@@@@@@@                   checking login status start");
       _checkLoginStatus();
     });
@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if(user != null){
       print("@@@@@@@@@@                   user is not null 1");
-
       await UserManager().initialize(); // Load user data
       print("@@@@@@@@@@                   user is not null 2");
       await checkUserData();  // Check if user exists in Firestore or create new
@@ -47,14 +46,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amberAccent,
-      body: Center(
-        child: Lottie.asset(
-            'assets/animations/splash.json',
-            width: 500,
-            fit: BoxFit.contain
+      body: SizedBox.expand(
+        child: Transform.scale(
+          scale: 1.4, // Adjust this value as needed
+          child: Lottie.asset(
+            'assets/animations/splashscreen.json',
+            fit: BoxFit.cover,
+          ),
         ),
-      )
+      ),
     );
   }
 }

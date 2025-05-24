@@ -62,9 +62,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 AnimatedPositioned(
                   duration: Duration(seconds: 2),
                   curve: Curves.easeInOut,
-                  right: _animate ? Width * 0.275 : Width * -0.2,
-                  bottom: Height * 0.52,
-                  child: Image.asset("assets/images/logo.png", width: Width * 0.4,),
+                  right: _animate ? Width * 0.25 : Width * -0.2,
+                  bottom: Height * 0.45,
+                  child: Column(
+                    children: [
+                      Icon(Icons.lock_outline, size: 80, color: Colors.deepPurple),
+                      SizedBox(height: 20),
+                      Text(
+                        'Welcome To (IOT)',
+                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                      ),
+                      SizedBox(height: 30,),
+                      Image.asset("assets/images/logo.png", width: Width * 0.4,),
+                    ],
+                  )
                 ),
                 Positioned(
                   bottom: Height * 0.2,
@@ -72,16 +83,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _handleSignIn,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFFFC900),
+                      backgroundColor: Colors.purpleAccent.shade100,
                       padding: EdgeInsets.symmetric(vertical: Height * 0.008, horizontal: Width * 0.01),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15),
+                      padding: EdgeInsets.only(left: 18, right: 18, top: 2, bottom: 2),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Sign In with Google", style: TextStyle(fontSize: 20),),
+                          Text("Sign In with Google", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w500),),
                           SizedBox(width: 15),
                           Image.asset("assets/images/google.png", height: 36),
                         ],
@@ -99,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
               '© 2025 Tappo. Making smart living simple..',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[600],
+                color: Colors.grey[800],
               ),
             ),
           ),

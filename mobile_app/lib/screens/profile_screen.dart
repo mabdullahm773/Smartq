@@ -7,8 +7,8 @@ import 'package:tappo/widgets/confirmation_message.dart';
 import 'package:tappo/widgets/custom_pop_message.dart';
 import 'package:tappo/widgets/loading_widget.dart';
 import '../services/auth_service.dart';
-import '../services/internet_service.dart';
 import '../services/user_manager_service.dart';
+import '../widgets/appbar_widget.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -77,31 +77,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE8E8D2),
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFFA700),
-        centerTitle: true,
-        title: Text("Profile", style: TextStyle(fontWeight: FontWeight.bold),),
-        elevation: 4,
-        shadowColor: Colors.black,
-        actions: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-              child: GestureDetector(
-                onTap: () =>  Navigator.pop(context),
-                child: CircleAvatar(
-                  backgroundColor: Color(0xFFE8E8D2),
-                  child: Icon(Icons.home),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          CustomAppBar(Title: "IoT Devices", BackButton: true, ProfileIcon: false,),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -116,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: Color(0xFFFFA700), width: 3),
+                              border: Border.all(color: Colors.purpleAccent, width: 3),
                               boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))],
                             ),
                             child: CircleAvatar(
@@ -132,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Color(0xFFFFA700)
+                                backgroundColor: Colors.purpleAccent
                               ),
                                 onPressed: () => _showImageEditingDialogue(context),
                                 child: Icon(Icons.edit, color: Colors.black, size: Width * 0.05,)
@@ -142,6 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
+                  // username
                   Padding(
                     padding: EdgeInsets.only(
                       left: Width * 0.15,
@@ -157,14 +137,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         hintText: UserManager().name.isNotEmpty ? UserManager().name : "Enter your username",
                         prefixIcon: Icon(Icons.person_outline, color: Colors.grey[600]),
                         filled: true,
-                        fillColor: Color(0xFFFFC300),
+                        fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Height * 0.02),
                           borderSide: BorderSide(color: Colors.grey.shade400),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Height * 0.02),
-                          borderSide: BorderSide(color: Colors.blueAccent, width: 2),
+                          borderSide: BorderSide(color: Colors.blueAccent),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Height * 0.08),
@@ -183,6 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                   ),
+                  // email
                   Padding(
                     padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
                     // for email
@@ -195,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         hintText: UserManager().email.isNotEmpty ? UserManager().email : "No Email Found X",
                         prefixIcon: Icon(Icons.email, color: Colors.grey[600]),
                         filled: true,
-                        fillColor: Color(0xFFFFC300),
+                        fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Height * 0.02),
                           borderSide: BorderSide(color: Colors.grey.shade400),
@@ -215,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       maxLines: 1,
                     ),
                   ),
+                  // created at
                   Padding(
                     padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
                     // for email
@@ -227,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         hintText: UserManager().createdAt!.isNotEmpty ? UserManager().createdAt : "Not Found",
                         prefixIcon: Icon(Icons.date_range, color: Colors.grey[600]),
                         filled: true,
-                        fillColor: Color(0xFFFFC300),
+                        fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(Height * 0.02),
                           borderSide: BorderSide(color: Colors.grey.shade400),
@@ -302,15 +284,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            // saving button
             if(_updatedetail) FloatingActionButton(
               onPressed: () async => await _floatingUpdateButton(),
-              child: Icon(Icons.save, color: Colors.green, size: 28,),
+              child: Icon(Icons.save, color: Colors.deepPurpleAccent, size: 28,),
               shape: CircleBorder(),
-              backgroundColor: Color(0xFFFFA700),
+              backgroundColor: Colors.white,
             ),
             SizedBox(
               height: 15,
             ),
+            // deleting button
             FloatingActionButton(
               onPressed: () async {
                 showDialog(context: context,
@@ -327,22 +311,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     )
                 );
               },
-              child: Icon(Icons.delete, color: Colors.red, size: 28,),
+              child: Icon(Icons.delete, color: Colors.deepPurpleAccent, size: 28,),
               shape: CircleBorder(),
-              backgroundColor: Color(0xFFFFA700),
+              backgroundColor: Colors.white,
             ),
             SizedBox(
               height: 15,
             ),
+            // logout button
             FloatingActionButton(
               onPressed: (){
                 signOutWithGoogle();
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               },
-              child: Icon(Icons.logout, color: Colors.red, size: 28,),
+              child: Icon(Icons.logout, color: Colors.deepPurpleAccent, size: 28,),
               shape: CircleBorder(),
-              backgroundColor: Color(0xFFFFA700),
+              backgroundColor: Colors.white,
             ),
           ],
         )

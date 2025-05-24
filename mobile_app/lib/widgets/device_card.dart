@@ -1,34 +1,50 @@
 import 'package:flutter/material.dart';
 
-class DeviceCard extends StatelessWidget {
+class DeviceCard extends StatefulWidget {
   final String deviceName;
   final String status;
   final IconData deviceIcon;
-  final VoidCallback onTap;
 
   const DeviceCard({
     super.key,
     required this.deviceName,
     required this.status,
     required this.deviceIcon,
-    required this.onTap,
   });
 
   @override
+  State<DeviceCard> createState() => _DeviceCardState();
+}
+
+class _DeviceCardState extends State<DeviceCard> {
+  late bool collapse;
+  @override
+  void initState() {
+    collapse = false;
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        setState(() {
+          collapse = !collapse;
+          print(collapse);
+        });
+      },
       child: Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Container(
+        child: collapse
+          ? Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFFC500), Color(0xFFFF9A4D),],
+              colors: [Colors.grey.shade300, Colors.grey.shade400,],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -39,13 +55,13 @@ class DeviceCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.3),
+                  color: Colors.black.withOpacity(0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  deviceIcon,
+                  widget.deviceIcon,
                   size: 30,
-                  color: Colors.white,
+                  color: Colors.deepPurpleAccent,
                 ),
               ),
               SizedBox(width: 16),
@@ -53,16 +69,64 @@ class DeviceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(deviceName, style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold,),),
+                    Text(widget.deviceName, style: TextStyle(color: Colors.purpleAccent, fontSize: 18, fontWeight: FontWeight.bold,),),
                     SizedBox(height: 6),
-                    Text(status, style: TextStyle(color: Colors.white70, fontSize: 14,),),
+                    Text(widget.status, style: TextStyle(color: Colors.purpleAccent, fontSize: 14,),),
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, color: Colors.white70, size: 20,)
+              Icon(Icons.arrow_forward_ios, color: Colors.deepPurpleAccent, size: 24,),
             ],
           ),
-        ),
+        )
+          : Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.grey.shade300, Colors.grey.shade400,],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          widget.deviceIcon,
+                          size: 30,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(widget.deviceName, style: TextStyle(color: Colors.purpleAccent, fontSize: 18, fontWeight: FontWeight.bold,),),
+                            SizedBox(height: 6),
+                            Text(widget.status, style: TextStyle(color: Colors.purpleAccent, fontSize: 14,),),
+                          ],
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios, color: Colors.deepPurpleAccent, size: 24,),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Container(color: Colors.black.withOpacity(0.1), height: 2,),
+                  ),
+                  SizedBox(height: 100,)
+                ],
+              ),
+            ),
       ),
     );
   }
