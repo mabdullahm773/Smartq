@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tappo/screens/device_screen.dart';
-import 'package:tappo/screens/login_screen.dart';
-import 'package:tappo/screens/profile_screen.dart';
-import 'package:tappo/services/auth_service.dart';
+import 'package:tappo/api/relay_channel.dart';
 import 'package:tappo/services/user_manager_service.dart';
-
-import '../api/device_api.dart';
-import '../services/screen_size_service.dart';
+import '../api/api_connectivity.dart';
 import '../widgets/appbar_widget.dart';
 import '../widgets/device_card.dart';
 
@@ -18,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  List<RelayChannel> relays = [];
   @override
   void initState() {
     _loadProfileImage();
@@ -30,14 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
   void _checkRelayStatus() async {
-    print("00000000000000000000000000000000000000000000000000000");
-    Relay relay = await fetchRelayById(1);
-    print("111111111111111111111111111111111111111111111111111111");
-    print("Relay ID: ${relay.id}");
-    print("Name: ${relay.deviceName}");
-    print("Is ON? ${relay.relayStatus}");
+    try {
+      relays = await fetchRelayChannels();
+    } catch (e) {
+      print('Error connecting to API or fetching data: $e');
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 SizedBox(height: 20),
-                DeviceCard(deviceName: 'My Device',status:'ON',deviceIcon: Icons.devices),
+                DeviceCard(deviceName: 'My Device',status:'ON',deviceIcon: Icons.devices, relays: relays,),
               ]
             ),
           ),
