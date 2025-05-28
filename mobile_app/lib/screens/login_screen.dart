@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tappo/screens/home_screen.dart';
 import 'package:tappo/services/auth_service.dart';
 import 'package:tappo/widgets/loading_widget.dart';
-import '../services/firebase_data_service.dart';
 import '../services/screen_size_service.dart';
 import '../services/user_data_service.dart';
 import '../services/user_manager_service.dart';
@@ -107,10 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Text(
-              '© 2025 Tappo. Making smart living simple..',
+              '© 2025 SmartQ. Making smart living simple..',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[800],
+                color: Colors.teal.shade700,
               ),
             ),
           ),

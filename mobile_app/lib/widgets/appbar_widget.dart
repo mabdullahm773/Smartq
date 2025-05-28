@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(16, 50, 16, 20),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.deepPurpleAccent,
+          color: Colors.teal,
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(20),
             bottomRight: Radius.circular(20),
@@ -45,7 +45,7 @@ class CustomAppBar extends StatelessWidget {
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen())),
               child: CircleAvatar(
                 backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.deepPurple,),
+                child: Icon(Icons.person, color: Colors.teal.shade700,),
               ),
             )
                 : SizedBox(width: 44,),

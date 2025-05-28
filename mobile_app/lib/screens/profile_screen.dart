@@ -6,6 +6,7 @@ import 'package:tappo/services/user_data_service.dart';
 import 'package:tappo/widgets/confirmation_message.dart';
 import 'package:tappo/widgets/custom_pop_message.dart';
 import 'package:tappo/widgets/loading_widget.dart';
+import '../api/api_connectivity.dart';
 import '../services/auth_service.dart';
 import '../services/user_manager_service.dart';
 import '../widgets/appbar_widget.dart';
@@ -74,13 +75,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {});
   }
 
+  Future<void> _showEditIpPortDialog() async {
+    TextEditingController controller = TextEditingController(text: ipAndPort);
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit IP and Port', style: TextStyle(color: Colors.teal),),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: 'IP and Port',
+              hintText: 'e.g. 192.168.100.11:5099',
+              labelStyle: TextStyle(color: Colors.teal, fontSize: 16),
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.text,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel', style: TextStyle(color: Colors.red),),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            ElevatedButton(
+              child: Text('Save', style: TextStyle(color: Colors.green),),
+              onPressed: () {
+                setState(() {
+                  ipAndPort = controller.text.trim();
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE8E8D2),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CustomAppBar(Title: "IoT Devices", BackButton: true, ProfileIcon: false,),
+          CustomAppBar(Title: "Profile", BackButton: true, ProfileIcon: false,),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -95,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.purpleAccent, width: 3),
+                              border: Border.all(color: Colors.tealAccent, width: 3),
                               boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 2))],
                             ),
                             child: CircleAvatar(
@@ -111,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 shape: CircleBorder(),
-                                backgroundColor: Colors.purpleAccent
+                                backgroundColor: Colors.tealAccent
                               ),
                                 onPressed: () => _showImageEditingDialogue(context),
                                 child: Icon(Icons.edit, color: Colors.black, size: Width * 0.05,)
@@ -126,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: EdgeInsets.only(
                       left: Width * 0.15,
                       right: Width * 0.15,
-                      top: Height * 0.08,
+                      top: Height * 0.04,
                     ),
                     child: TextField(
                       controller: _usernameController,
@@ -135,7 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: " Username",
                         labelStyle: TextStyle(fontSize: 15, color: Colors.black),
                         hintText: UserManager().name.isNotEmpty ? UserManager().name : "Enter your username",
-                        prefixIcon: Icon(Icons.person_outline, color: Colors.grey[600]),
+                        prefixIcon: Icon(Icons.person_outline, color: Colors.teal),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
@@ -165,7 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   // email
                   Padding(
-                    padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
+                    padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.02),
                     // for email
                     child: TextField(
                       readOnly: true,
@@ -174,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         counterText : "",
                         labelText : " Email ",
                         hintText: UserManager().email.isNotEmpty ? UserManager().email : "No Email Found X",
-                        prefixIcon: Icon(Icons.email, color: Colors.grey[600]),
+                        prefixIcon: Icon(Icons.email, color: Colors.teal),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
@@ -198,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   // created at
                   Padding(
-                    padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.035),
+                    padding: EdgeInsets.only(left: Width * 0.15, right: Width * 0.15, top: Height * 0.02),
                     // for email
                     child: TextField(
                       readOnly: true,
@@ -207,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         counterText : "",
                         labelText : " Id Created At ",
                         hintText: UserManager().createdAt!.isNotEmpty ? UserManager().createdAt : "Not Found",
-                        prefixIcon: Icon(Icons.date_range, color: Colors.grey[600]),
+                        prefixIcon: Icon(Icons.date_range, color: Colors.teal),
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         border: OutlineInputBorder(
@@ -229,6 +270,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       maxLines: 1,
                     ),
                   ),
+                  // api button
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: ElevatedButton(
+                      onPressed: _showEditIpPortDialog,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text('Edit Api URL',  style: TextStyle(color: Colors.teal, fontSize: 16),),
+                      ),
+                    ),
+                  ),
                 ]
               ),
             ),
@@ -236,58 +288,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Text(
-              '© 2025 Tappo. Making smart living simple..',
+              '© 2025 SmartQ. Making smart living simple..',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[600],
+                color: Colors.teal.shade700,
               ),
             ),
           ),
         ],
       ),
-      // floatingActionButton: Positioned(
-      //   bottom: Height * 0.1,
-      //   right:  Width * 0.05,
-      //   child: Row(
-      //     children: [
-      //       FloatingActionButton(
-      //         backgroundColor: Colors.amberAccent,
-      //         foregroundColor: Colors.red,
-      //         shape: RoundedRectangleBorder(
-      //           borderRadius: BorderRadius.circular(40)
-      //         ),
-      //         child: Icon(Icons.logout_rounded, size: 28),
-      //         onPressed: (){
-      //           signOutWithGoogle();
-      //           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      //         }
-      //       ),
-      //       Visibility(
-      //         visible: _updatedetail,
-      //         child: FloatingActionButton(
-      //           backgroundColor: Colors.amberAccent,
-      //           foregroundColor: Colors.red,
-      //           shape: RoundedRectangleBorder(
-      //               borderRadius: BorderRadius.circular(40)
-      //           ),
-      //           child: Icon(Icons.logout_rounded, size: 28),
-      //           onPressed: (){
-      //             signOutWithGoogle();
-      //             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      //           }
-      //         )
-      //       )
-      //     ],
-      //   ),
-      // ),
-        floatingActionButton: Column(
+      floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             // saving button
             if(_updatedetail) FloatingActionButton(
               onPressed: () async => await _floatingUpdateButton(),
-              child: Icon(Icons.save, color: Colors.deepPurpleAccent, size: 28,),
+              child: Icon(Icons.save, color: Colors.green, size: 28,),
               shape: CircleBorder(),
               backgroundColor: Colors.white,
             ),
@@ -311,7 +328,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     )
                 );
               },
-              child: Icon(Icons.delete, color: Colors.deepPurpleAccent, size: 28,),
+              child: Icon(Icons.delete, color: Colors.red, size: 28,),
               shape: CircleBorder(),
               backgroundColor: Colors.white,
             ),
@@ -325,7 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => LoginScreen()));
               },
-              child: Icon(Icons.logout, color: Colors.deepPurpleAccent, size: 28,),
+              child: Icon(Icons.logout, color: Colors.red, size: 28,),
               shape: CircleBorder(),
               backgroundColor: Colors.white,
             ),
@@ -401,5 +418,6 @@ _handleDeletion(context) async {
     );
   }
 }
+
 
 

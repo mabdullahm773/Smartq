@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tappo/services/screen_size_service.dart';
-
 import '../screens/login_screen.dart';
 import '../services/auth_service.dart';
 

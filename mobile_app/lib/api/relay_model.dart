@@ -1,9 +1,13 @@
 class RelayChannel {
   final int id;
   final String? deviceName;
-  final bool relayStatus;
+  bool relayStatus;
 
-  RelayChannel({required this.id, this.deviceName, required this.relayStatus});
+  RelayChannel({
+    required this.id,
+    this.deviceName,
+    required this.relayStatus,
+  });
 
   factory RelayChannel.fromJson(Map<String, dynamic> json) {
     return RelayChannel(
@@ -12,4 +16,10 @@ class RelayChannel {
       relayStatus: json['relayStatus'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'deviceName': deviceName,
+    'relayStatus': relayStatus,
+  };
 }

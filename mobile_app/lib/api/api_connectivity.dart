@@ -1,17 +1,33 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:tappo/api/relay_model.dart';
 
-import 'package:tappo/api/relay_channel.dart';
+String ipAndPort = '192.168.100.11:5099';
+String get baseUrl => 'http://$ipAndPort/relay';
 
-Future<List<RelayChannel>> fetchRelayChannels() async {
-  final response = await http.get(Uri.parse('http://192.168.100.11:5099/relay'));
-  if (response.statusCode == 200) {
-    final List<dynamic> relayList = jsonDecode(response.body);
-    return relayList
-        .map((json) => RelayChannel.fromJson(json))
-        .where((relay) => [1, 2, 3, 4].contains(relay.id))
-        .toList();
-  } else {
-    throw Exception('Failed to load relay channels');
+
+class RelayApiService {
+
+  static Future<List<RelayChannel>> fetchRelays() async {
+    final response = await http.get(Uri.parse(baseUrl));
+    if (response.statusCode == 200) {
+      final List data = json.decode(response.body);
+      return data.map((e) => RelayChannel.fromJson(e)).toList();
+    } else {
+      throw Exception('Failed to load relays');
+    }
   }
+
+  static Future<void> updateRelay(RelayChannel relay) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/${relay.id}'), // <-- Add ID to URL for PUT
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(relay.toJson()),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      throw Exception('Failed to update relay');
+    }
+  }
+
 }

@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tappo/api/relay_channel.dart';
-import 'package:tappo/widgets/toggle_switch.dart';
+import 'package:tappo/services/screen_size_service.dart';
+
+import '../api/relay_data.dart';
+import '../api/relay_model.dart';
+import '../screens/device_screen.dart';
 
 class DeviceCard extends StatefulWidget {
-  final String deviceName;
-  final String status;
-  final IconData deviceIcon;
-  final List<RelayChannel> relays;
 
-  const DeviceCard({
-    super.key,
-    required this.deviceName,
-    required this.status,
-    required this.deviceIcon,
-    required this.relays
-  });
+  const DeviceCard({super.key});
 
   @override
   State<DeviceCard> createState() => _DeviceCardState();
@@ -22,14 +15,70 @@ class DeviceCard extends StatefulWidget {
 
 class _DeviceCardState extends State<DeviceCard> {
   late bool collapse;
+  bool isLoading = true;
+  final RelayData relayData = RelayData();
+
   @override
   void initState() {
     collapse = false;
-    // TODO: implement initState
+    _initializeRelays();
     super.initState();
   }
-  @override
+
+  Future<void> _initializeRelays() async {
+
+    await relayData.loadRelays();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Widget _buildRelaySwitch(int id) {
+    RelayChannel relay = relayData.getRelayById(id);
+    return SwitchListTile(
+      title: Text(relay.deviceName ?? 'Relay $id', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.teal.shade600,),),
+      value: relay.relayStatus,
+      onChanged: (bool value) async {
+        await relayData.toggleRelay(id);
+        setState(() {}); // refresh UI
+      },
+      inactiveTrackColor: Colors.white,
+      inactiveThumbColor: Colors.red.shade300,
+      activeColor: Colors.teal,
+    );
+  }
+
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Column(
+        children: [
+          SizedBox(height: Height * 0.3,),
+          Text(
+            'Something went wrong.\nPlease try again.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.redAccent.shade700, fontSize: 20, fontWeight: FontWeight.w500, letterSpacing: 0.5,),
+          ),
+          SizedBox(height: Height * 0.075,),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal.shade400
+            ),
+            onPressed: () async {
+              setState(() {
+                isLoading = true;  // Show loader again
+              });
+              await _initializeRelays();  // Reload data
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 23),
+              child: Icon(Icons.refresh, color: Colors.orangeAccent, size: 36),
+            ),
+          )
+
+        ],
+      );
+    }
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -43,54 +92,10 @@ class _DeviceCardState extends State<DeviceCard> {
           borderRadius: BorderRadius.circular(20),
         ),
         margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: collapse
-          ? Container(
+        child:Container(
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.grey.shade300, Colors.grey.shade400,],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      widget.deviceIcon,
-                      size: 30,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(widget.deviceName, style: TextStyle(color: Colors.purpleAccent, fontSize: 18, fontWeight: FontWeight.bold,),),
-                        SizedBox(height: 6),
-                        Text(widget.status, style: TextStyle(color: Colors.purpleAccent, fontSize: 14,),),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.arrow_forward_ios, color: Colors.deepPurpleAccent, size: 24,),
-                ],
-              ),
-            )
-          : Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.grey.shade300, Colors.grey.shade400,],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: Color(0xFFC9E8E6),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -98,15 +103,15 @@ class _DeviceCardState extends State<DeviceCard> {
                   Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(14),
+                        padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.white.withOpacity(0.6),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          widget.deviceIcon,
+                          Icons.devices,
                           size: 30,
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.teal,
                         ),
                       ),
                       SizedBox(width: 16),
@@ -114,28 +119,47 @@ class _DeviceCardState extends State<DeviceCard> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(widget.deviceName, style: TextStyle(color: Colors.purpleAccent, fontSize: 18, fontWeight: FontWeight.bold,),),
+                            Text("IoT Device", style: TextStyle(color: Colors.teal.shade600, fontSize: 18, fontWeight: FontWeight.bold,),),
                             SizedBox(height: 6),
-                            Text(widget.status, style: TextStyle(color: Colors.purpleAccent, fontSize: 14,),),
+                            Text("Active", style: TextStyle(color: Colors.teal.shade400, fontSize: 15,),),
                           ],
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios, color: Colors.deepPurpleAccent, size: 24,),
+                      Icon(Icons.arrow_forward_ios, color: Colors.black, size: 24,),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    child: Container(color: Colors.black.withOpacity(0.1), height: 2,),
-                  ),
-                  Row(
+                  collapse
+                  ?
+                  Column(
                     children: [
-
-                      ToggleSwitch(isOn: true,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Container(color: Colors.black.withOpacity(0.1), height: 2,),
+                      ),
+                      Column(
+                        children: [
+                          _buildRelaySwitch(1),
+                          _buildRelaySwitch(2),
+                          _buildRelaySwitch(3),
+                          _buildRelaySwitch(4),
+                          SizedBox(height: 20,),
+                          ElevatedButton.icon(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => DeviceScreen()),
+                            ),
+                            icon: Icon(Icons.edit, color: Colors.teal,),        // The icon to display
+                            label: Text('Edit', style: TextStyle(color: Colors.teal),),      // The text label
+                          ),
+                        ],
+                      )
                     ],
-                  ),
+                  )
+                  :
+                  SizedBox()
                 ],
               ),
-            ),
+            )
       ),
     );
   }
