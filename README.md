@@ -36,7 +36,7 @@ A IoT-based project that controls home relays via a mobile application, RESTful 
 1. Install .NET 8,9 SDK
 2. Navigate to /restful_api_dotnet
 3. Configure appsettings.json with your SQL Server connection string
-4. Run on http
+4. Run and host API on http
 
 ### 🗄️ SQL Server
 1. Donwload Sql Server
@@ -50,5 +50,5 @@ A IoT-based project that controls home relays via a mobile application, RESTful 
 3. Change the API URL in the code to enable the mobile app to fetch the hardware device.
 
 > ⚠️ **Note:**  
-> Both the ESP32 device and the mobile app **must be connected to the same local network (Wi-Fi)**.  
+> Both the ESP32 device, API and the mobile app **must be connected to the same local network (Wi-Fi)**.  
 > This project does **not support public or external network access** for the API or device communication.
