@@ -48,3 +48,7 @@ A IoT-based project that controls home relays via a mobile application, RESTful 
 3. Connect it with the Flutter project.
 2. Enable Google Sign-In under Firebase Auth.
 3. Change the API URL in the code to enable the mobile app to fetch the hardware device.
+
+> ⚠️ **Note:**  
+> Both the ESP32 device and the mobile app **must be connected to the same local network (Wi-Fi)**.  
+> This project does **not support public or external network access** for the API or device communication.
