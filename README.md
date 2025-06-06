@@ -1,6 +1,8 @@
-# 🔧 Smart Relay Control System
+# Smartq
 
-A full-stack IoT-based project that controls home relays via a mobile application, RESTful API, and embedded hardware. This system includes:
+## 🔧 Smart Relay Control System
+
+A IoT-based project that controls home relays via a mobile application, RESTful API, and embedded hardware. This system includes:
 
 - 🧠 Embedded control using **ESP32 (ESP-IDF)**
 - 📱 Cross-platform mobile app built with **Flutter**
@@ -13,9 +15,9 @@ A full-stack IoT-based project that controls home relays via a mobile applicatio
 ## 🗂️ Key features
 | Layer          | Technology             | Purpose                                                  |
 | -------------- | ---------------------- | -------------------------------------------------------- |
-| Embedded       | ESP32 + ESP-IDF        | Controls physical relays via GPIO                        |
+| Embedded       | ESP32 (ESP-IDF)        | Controls physical relays via GPIO                        |
 | Mobile App     | Flutter                | User interface to control and monitor relay states       |
-| Backend API    | ASP.NET Core (.NET 8)  | RESTful API to manage relays and sync with database      |
+| Backend API    | ASP.NET Core           | RESTful API to manage relays and sync with database      |
 | Database       | Microsoft SQL Server   | Stores relay status, user data, and app-related records  |
 | Auth + Profile | Firebase (Google Auth) | Handles user login, image, name, and profile information |
 
