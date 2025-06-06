@@ -23,27 +23,27 @@ A IoT-based project that controls home relays via a mobile application, RESTful 
 
 
 ## ⚙️ Setup Instructions
-## ESP32 (ESP-IDF)
+### ESP32 (ESP-IDF)
 1. Install ESP-IDF: ESP-IDF Setup Guide
 2. Navigate to /esp32_firmware
 3. Configure your WiFi credentials and the API URL in hardwarecode 
 4. Flash the firmware:
-idf.py build
-idf.py -p port(COM#, COM$ etc) flash
-idf.py monitor (optional)
+   4.1 idf.py build
+   4.2 idf.py -p port(COM3, COM4 etc) flash
+   4.3 idf.py monitor (optional)
 
-## 🌐 ASP.NET Core API
+### 🌐 ASP.NET Core API
 1. Install .NET 8,9 SDK
 2. Navigate to /restful_api_dotnet
 3. Configure appsettings.json with your SQL Server connection string
 4. Run on http
 
-## 🗄️ SQL Server
+### 🗄️ SQL Server
 1. Donwload Sql Server
 2. Download SSMS
 3. Start SSMS and copy and use that connection string in the API code
 
-## 📱 Flutter App Setup (with Firebase)
+### 📱 Flutter App Setup (with Firebase)
 1. Set up a Firebase project.
 3. Connect it with the Flutter project.
 2. Enable Google Sign-In under Firebase Auth.
