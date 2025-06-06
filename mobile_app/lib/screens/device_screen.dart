@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tappo/services/screen_size_service.dart';
 import 'package:tappo/widgets/custom_pop_message.dart';
+import 'package:tappo/widgets/loading_widget.dart';
 import '../api/api_connectivity.dart';
 import '../api/relay_model.dart';
 import '../widgets/appbar_widget.dart';
@@ -11,7 +14,7 @@ class DeviceScreen extends StatefulWidget {
 
 class _DeviceScreenState extends State<DeviceScreen> {
   List<RelayChannel> _relays = [];
-
+  bool predataload = true;
   @override
   void initState() {
     super.initState();
@@ -19,6 +22,10 @@ class _DeviceScreenState extends State<DeviceScreen> {
   }
 
   Future<void> _loadRelays() async {
+    Future.delayed(Duration(milliseconds: 500) ,(){
+      predataload = false;
+      setState(() {});
+    });
     final relays = await RelayApiService.fetchRelays();
     setState(() {
       _relays = relays;
@@ -77,6 +84,10 @@ class _DeviceScreenState extends State<DeviceScreen> {
     );
   }
 
+  void _showLoading(){
+    showLoadingDialog(context);
+  }
+
   Widget buildRelayCard(int index) {
     final relay = _relays[index];
     return Padding(
@@ -85,7 +96,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
         color: Color(0xFFC9E8E6),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 4,
-        margin: const EdgeInsets.symmetric(vertical: 8),
+        margin: EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           title: Text(
@@ -100,12 +111,21 @@ class _DeviceScreenState extends State<DeviceScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
+      body: predataload
+      ? Column(
+        children: [
+          CustomAppBar(Title: "Edit Device Names", BackButton: true, ProfileIcon: false,),
+          SizedBox(height: Height * 0.32,),
+          SpinKitCircle(color: Colors.grey, size: 65,),
+          SizedBox(height: Height * 0.03,),
+          Text("Loading Please Wait ....", style: TextStyle(color: Colors.grey, fontSize: 16),)
+        ],
+      )
+      : SingleChildScrollView(
+          child: Column(
             children: [
               CustomAppBar(Title: "Edit Device Names", BackButton: true, ProfileIcon: false,),
               buildRelayCard(0),
@@ -114,7 +134,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
               buildRelayCard(3),
             ],
           ),
-      )
+        )
     );
   }
 }

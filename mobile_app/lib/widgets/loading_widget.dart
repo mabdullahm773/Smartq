@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 void showLoadingDialog(BuildContext context) {
   showDialog(
     context: context,
-    barrierDismissible: false, // User can't dismiss by tapping outside
+    barrierDismissible: false, //can't dismiss by tapping outside the widget blur side
     builder: (BuildContext context) {
       return Dialog(
         backgroundColor: Colors.transparent,
@@ -16,10 +16,10 @@ void showLoadingDialog(BuildContext context) {
               width: 150,
               height: 150,
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 10),
+            Text(
               "Loading...",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 20),
             ),
           ],
         ),

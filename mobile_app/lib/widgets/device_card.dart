@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tappo/services/screen_size_service.dart';
-
 import '../api/relay_data.dart';
 import '../api/relay_model.dart';
 import '../screens/device_screen.dart';
@@ -16,17 +16,21 @@ class DeviceCard extends StatefulWidget {
 class _DeviceCardState extends State<DeviceCard> {
   late bool collapse;
   bool isLoading = true;
+  bool reload = true;
   final RelayData relayData = RelayData();
 
   @override
   void initState() {
     collapse = false;
+    Future.delayed(Duration(seconds: 1), (){
+      reload = false;
+      setState(() {});
+    });
     _initializeRelays();
     super.initState();
   }
 
   Future<void> _initializeRelays() async {
-
     await relayData.loadRelays();
     setState(() {
       isLoading = false;
@@ -39,6 +43,7 @@ class _DeviceCardState extends State<DeviceCard> {
       title: Text(relay.deviceName ?? 'Relay $id', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.teal.shade600,),),
       value: relay.relayStatus,
       onChanged: (bool value) async {
+        value = !value;
         await relayData.toggleRelay(id);
         setState(() {}); // refresh UI
       },
@@ -49,6 +54,15 @@ class _DeviceCardState extends State<DeviceCard> {
   }
 
   Widget build(BuildContext context) {
+    if(reload)
+      return Column(
+        children: [
+          SizedBox(height: Height * 0.32,),
+          SpinKitCircle(color: Colors.grey, size: 65,),
+          SizedBox(height: Height * 0.03,),
+          Text("Loading Please Wait ....", style: TextStyle(color: Colors.grey, fontSize: 16),)
+        ],
+      );
     if (isLoading) {
       return Column(
         children: [
@@ -65,7 +79,11 @@ class _DeviceCardState extends State<DeviceCard> {
             ),
             onPressed: () async {
               setState(() {
-                isLoading = true;  // Show loader again
+                reload = true;
+                Future.delayed(Duration(seconds: 2),(){
+                  reload = false;
+                  setState(() {});
+                });
               });
               await _initializeRelays();  // Reload data
             },

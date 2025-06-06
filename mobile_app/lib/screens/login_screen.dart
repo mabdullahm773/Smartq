@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFE0F2F1),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -58,20 +59,17 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Stack(
               children: [
                 AnimatedPositioned(
-                  duration: Duration(seconds: 2),
+                  duration: Duration(seconds: 1),
                   curve: Curves.easeInOut,
-                  right: _animate ? Width * 0.25 : Width * -0.2,
+                  right: _animate ? Width * 0.22 : Width * -0.2,
                   bottom: Height * 0.45,
                   child: Column(
                     children: [
-                      Icon(Icons.lock_outline, size: 80, color: Colors.deepPurple),
+                      Image.asset("assets/images/smartq_logo.png", width: Width * 0.4,),
+                      // Icon(Icons.lock_outline, size: 80, color: Colors.deepPurple),
                       SizedBox(height: 20),
-                      Text(
-                        'Welcome To (IOT)',
-                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.deepPurple),
-                      ),
                       SizedBox(height: 30,),
-                      Image.asset("assets/images/logo.png", width: Width * 0.4,),
+                      Text('Welcome To Smartq', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.teal.shade400),),
                     ],
                   )
                 ),
@@ -81,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _handleSignIn,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purpleAccent.shade100,
+                      backgroundColor: Colors.teal.shade400,
                       padding: EdgeInsets.symmetric(vertical: Height * 0.008, horizontal: Width * 0.01),
                     ),
                     child: Padding(
