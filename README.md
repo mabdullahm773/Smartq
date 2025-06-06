@@ -52,3 +52,4 @@ A IoT-based project that controls home relays via a mobile application, RESTful 
 > ⚠️ **Note:**  
 > Both the ESP32 device, API and the mobile app **must be connected to the same local network (Wi-Fi)**.  
 > This project does **not support public or external network access** for the API or device communication.
+> For better understanding take a look at the **diagrams** provided in the directory.
