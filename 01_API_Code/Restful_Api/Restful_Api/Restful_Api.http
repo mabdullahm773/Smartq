@@ -1,0 +1,6 @@
+@Restful_Api_HostAddress = http://localhost:5099
+
+GET {{Restful_Api_HostAddress}}/devicescontroller/
+Accept: application/json
+
+###

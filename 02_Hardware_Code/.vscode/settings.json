@@ -1,0 +1,93 @@
+{
+  // As of VS-code v1.56.1 integrated terminals require additional configuration to work correctly. 
+  // see https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations 
+  // to edit the `setting.json` file and add the following line:
+  // "terminal.integrated.allowWorkspaceConfiguration":true
+
+  "terminal.integrated.profiles.windows": {
+    "idf": {
+      "path": "cmd.exe",
+      "args": ["/k", "<%= IDF_PATH %>/export.bat"],
+      "env": {
+      }
+    }
+  },
+  "terminal.integrated.profiles.linux": {
+    "idf": {
+      "path": "/bin/bash",
+      "args":["--init-file", "<%= IDF_PATH %>/export.sh", "-i"],
+        "env": {
+        }
+    },
+  },
+  "files.associations": {
+    "*.md": "markdown",
+    "*.mdx": "tdx",
+    "stdio.h": "c",
+    "task.h": "c",
+    "freertos.h": "c",
+    "esp_timer.h": "c",
+    "u8g2.h": "c",
+    "mylibrary.h": "c",
+    "i2c_slave.h": "c",
+    "array": "cpp",
+    "atomic": "cpp",
+    "bit": "cpp",
+    "charconv": "cpp",
+    "chrono": "cpp",
+    "compare": "cpp",
+    "complex": "cpp",
+    "cstddef": "cpp",
+    "deque": "cpp",
+    "format": "cpp",
+    "functional": "cpp",
+    "future": "cpp",
+    "iterator": "cpp",
+    "limits": "cpp",
+    "memory": "cpp",
+    "mutex": "cpp",
+    "ranges": "cpp",
+    "regex": "cpp",
+    "sstream": "cpp",
+    "system_error": "cpp",
+    "type_traits": "cpp",
+    "vector": "cpp",
+    "xhash": "cpp",
+    "xiosbase": "cpp",
+    "xlocale": "cpp",
+    "xlocbuf": "cpp",
+    "xlocmon": "cpp",
+    "xloctime": "cpp",
+    "xmemory": "cpp",
+    "xstring": "cpp",
+    "xtree": "cpp",
+    "xutility": "cpp",
+    "i2c.h": "c",
+    "coroutine": "c",
+    "u8g2lib.h": "c",
+    "u8x8lib.h": "c",
+    "cstdint": "c",
+    "gpio.h": "c",
+    "lvgl_spi_conf.h": "c",
+    "st7735_hal.h": "c",
+    "spi_master.h": "c",
+    "esp_lcd_panel_ops.h": "c",
+    "esp_lcd_st7735.h": "c",
+    "lvgl.h": "c",
+    "stdlib.h": "c",
+    "random": "c",
+    "variant": "c",
+    "filesystem": "c",
+    "video.h": "c",
+    "st7735_reg.h": "c",
+    "esp_log.h": "c",
+    "test": "c",
+    "phejo.h": "c",
+    "tft_text.h": "c",
+    "font8x8_basic.h": "c",
+    "math.h": "c",
+    "optional": "c",
+    "esp_wifi.h": "c"
+  },
+   "C_Cpp.errorSquiggles": "Disabled",
+}

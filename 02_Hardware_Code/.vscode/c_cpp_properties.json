@@ -1,0 +1,37 @@
+{
+    "env": {
+        "IDF_TOOLS": "C:/Espressif/tools",
+        "IDF_PATH": "C:/Espressif/frameworks/esp-idf-v5.4.1"
+    },
+    "configurations": [
+        {
+            "name": "OS",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/build/config",
+                    "${workspaceFolder}",
+                    "${IDF_PATH}/components",
+                    "${IDF_TOOLS}/xtensa-esp-elf",
+                    "D:/05_SemesterProjects/02_CyberSecurity/QuantumFox/components/st7735_drivers_espidf"
+                ],
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/build/config",
+                "${workspaceFolder}/build/bootloader/config",
+                "${IDF_PATH}/components/freertos/**",
+                "${IDF_PATH}/components/**",
+                "D:/05_SemesterProjects/02_CyberSecurity/QuantumFox/components/st7735_drivers_espidf",
+                "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/lib/gcc/xtensa-esp-elf/14.2.0/include",
+                "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/xtensa-esp-elf/include",
+                "C:/Espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/xtensa-esp-elf/include/c++/14.2.0"
+            ],
+            "defines": [],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
