@@ -1,4 +1,4 @@
-# Smartq
+# SMARTQ
 
 ## 🔧 Smart Relay Control System
 
@@ -23,7 +23,7 @@ A IoT-based project that controls home relays via a mobile application, RESTful 
 
 
 ## ⚙️ Setup Instructions
-### 📟ESP32 (ESP-IDF)
+### 📟 ESP32 (ESP-IDF)
 1. Install ESP-IDF: ESP-IDF Setup Guide
 2. Navigate to /esp32_firmware
 3. Configure your WiFi credentials and the API URL in hardwarecode 
